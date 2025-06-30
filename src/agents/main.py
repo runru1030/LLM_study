@@ -26,7 +26,7 @@ def pretty_print_messages(response):
 
 async def main():
     # OpenAI 모델 초기화
-    model = get_model(ModelID.OLLAMA_LLAMA3_2)
+    model = get_model(ModelID.OPENAI_GPT_41_MINI)
 
     # API 키를 환경 변수에서 가져오기
     smithery_api_key = os.getenv("SMITHERY_API_KEY")
@@ -48,7 +48,7 @@ async def main():
     # # 메시지를 통한 도구 호출
     response = await agent.ainvoke(
         {
-            "messages": "runru1030 계정의 toss-fe-next2023 레포지토리에서 pull request 리스트를 조회해줘 그리고 그 pr들의 파일 변경사항을 조회해줘"
+            "messages": "runru1030 계정의 LLM_study 레포지토리에서 pull request 리스트를 조회해줘 그리고 그 pr들의 파일 변경 세부 내용을 요약해줘"
         }
     )
     pretty_print_messages(response)

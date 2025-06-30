@@ -35,10 +35,9 @@ class CustomFakeListChatModel(FakeListChatModel):
 
 class ModelID(StrEnum):
     CLAUDE_HAIKU = "anthropic.claude-3-5-haiku-20241022-v1:0"
-    OPENAI_GPT_4O_MINI = "gpt-4o-mini"
     OLLAMA_LLAMA3_2 = "llama3.2"
     OLLAMA_LLAMA3_2_1B = "llama3.2:1b"
-    OPENAI_GPT_4O = "gpt-4.1-mini"
+    OPENAI_GPT_41_MINI = "gpt-4.1-mini"
     FAKE = "fake"
 
 
@@ -58,7 +57,7 @@ def get_model(model_id: ModelID, temperature: float = 0.5) -> BaseChatModel:
             return ChatOllama(model="llama3.2", temperature=0.3)
         case ModelID.OLLAMA_LLAMA3_2_1B:
             return ChatOllama(model="llama3.2:1b", temperature=0.3)
-        case ModelID.OPENAI_GPT_4O:
+        case ModelID.OPENAI_GPT_41_MINI:
             return ChatOpenAI(
                 model_name=model_id,
                 openai_api_key=os.getenv("OPENAI_API_KEY"),
