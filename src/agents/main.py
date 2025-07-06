@@ -15,9 +15,7 @@ load_dotenv()
 
 
 async def main():
-    mode = "mcp"
-    if len(sys.argv) > 1:
-        mode = sys.argv[1]
+    mode = sys.argv[1] if len(sys.argv) > 1 else "mcp"
 
     model = get_model(ModelID.OPENAI_GPT_41_MINI)
 
@@ -38,7 +36,7 @@ async def main():
     agent = create_react_agent(model, tools)
     response = await agent.ainvoke(
         {
-            "messages": "HITS-AI 조직의 ai-assistant 레포지토리에서 open 상태의 pull request 리스트를 조회해줘 그리고 그 pull request의 파일 변경 파일 코드도 조회해줘"
+            "messages": "HITS-AI 조직의 ai-assistant 레포지토리에서 open 상태의 PR 번호들을 조회해줘"
         }
     )
     pretty_print_messages(response)
