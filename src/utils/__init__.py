@@ -11,8 +11,14 @@ def pretty_print_messages(response):
             or msg.__class__.__name__
         )
         content = getattr(msg, "content", str(msg))
+        additional_kwargs = getattr(msg, "additional_kwargs", {})
+
         print(f"[{role.upper()}]")
         print(content)
+        if "tool_calls" in additional_kwargs:
+            print(
+                f"[{role.upper()}]: {[tool_call.get('function', {}).get('name', 'Unknown') for tool_call in additional_kwargs['tool_calls']]}"
+            )
         print("-" * 40)
     print("=" * 40)
 

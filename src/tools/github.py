@@ -32,7 +32,7 @@ github_client = GitHubClient()
 
 
 @tool
-async def get_pull_requests(
+async def get_pull_request_numbers(
     repo_name: Annotated[str, "github repository name"],
     state: Annotated[str, "pull request state"] = "open",
     org_name: Annotated[str | None, "github organization name"] = None,
@@ -41,22 +41,7 @@ async def get_pull_requests(
     try:
         repo = github_client.get_repo(repo_name, org_name)
         pulls = repo.get_pulls(state=state)
-
-        result = []
-        for pr in pulls:
-            pr_info = {
-                "number": pr.number,
-                "title": pr.title,
-                "state": pr.state,
-                "author": pr.user.login,
-                "created_at": pr.created_at.isoformat(),
-                "updated_at": pr.updated_at.isoformat(),
-                "url": pr.html_url,
-                "body": pr.body[:200] + "..."
-                if pr.body and len(pr.body) > 200
-                else pr.body,
-            }
-            result.append(pr_info)
+        result = [pr.number for pr in pulls]
 
         return f"총 {len(result)}개의 {state} Pull Request를 찾았습니다: {result}"
 
@@ -65,7 +50,7 @@ async def get_pull_requests(
 
 
 @tool
-async def get_pull_request_changed_files(
+async def get_pull_request_diff(
     repo_name: Annotated[str, "github repository name"],
     pull_request_number: Annotated[int, "pull request number"],
     org_name: Annotated[str | None, "github organization name"] = None,
@@ -76,22 +61,14 @@ async def get_pull_request_changed_files(
         pr = repo.get_pull(pull_request_number)
 
         files = pr.get_files()
-        result = []
-
-        for file in files:
-            file_info = {
+        result = [
+            {
                 "filename": file.filename,
                 "status": file.status,  # added, modified, removed
-                "additions": file.additions,
-                "deletions": file.deletions,
-                "changes": file.changes,
-                "patch": file.patch[:500] + "..."
-                if file.patch and len(file.patch) > 500
-                else file.patch,  # 실제 코드 변경 내용
-                "raw_url": file.raw_url,
-                "blob_url": file.blob_url,
+                "patch": file.patch,  # 실제 코드 변경 내용
             }
-            result.append(file_info)
+            for file in files
+        ]
 
         return f"PR #{pull_request_number}의 파일 변경 정보: {result}"
 
